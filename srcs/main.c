@@ -98,13 +98,18 @@ int	compile_srcs(char **srcs)
 {
 	char *src;
 	char command_build[] = "gcc -o src.o -c ";
+	char redirect_std[] = " 2> unitlogs";
 	char *command;
 
 	src = srcs_to_build_command(srcs);
-	command = (char *)malloc(sizeof(char) * strlen(src) + strlen(command_build));
+
+
+	command = (char *)malloc(sizeof(char) * (strlen(src) + strlen(command_build) + strlen(redirect_std)));
+
 	strcat(command, command_build);
 	strcat(command, src);
-	printf("%s\n", command);
+	strcat(command, redirect_std);
+	
 	return (system(command));
 }
 
@@ -112,15 +117,15 @@ int	compile_test(char *test)
 {
 	char command_build[] = "gcc -o unit_test main_unit_test.c unit_test.c src.o ";
 	char *command;
+	char redirect_std[] = " 2> unitlogs";
+
+	command = (char *)malloc(sizeof(char) * (strlen(test) + strlen(command_build) + strlen(redirect_std)));
 	
-	command = (char *)malloc(sizeof(char) * strlen(test) + strlen(command_build));
 	strcat(command, command_build);
 	strcat(command, test);
-	printf("%s%s%s\n" COLOR_RESET,COLOR_RED, command, COLOR_RESET);
+	strcat(command, redirect_std);
 	return (system(command));
 }
-
-
 
 /*
 	Return 1 if the string match "-{option}", else return 0,
@@ -193,7 +198,6 @@ void	take_args_with_option(char **srcs, char **argv, char option)
 		{
 			srcs[y] = (char *)malloc(sizeof(char) * strlen(argv[i]));
 			strcpy(srcs[y], argv[i]);
-			printf("param with option -%c :  %s\n", option, srcs[y]);
 			y++;
 		}
 		i++;
@@ -210,8 +214,14 @@ void	process_tests(char **tests)
 	 i = 0;
 	 while (tests[i])
 	 {
-		 if (compile_test(tests[i]) == 0)
+		if (compile_test(tests[i]) == 0)
+		{
+			printf("Compilation du fichier de test {%s} :                     %sOK%s\n", tests[i], GREEN, RESET);
 			system("./unit_test");
+			printf("\n");
+		}
+		else
+			printf("Compilation du fichier de test {%s} :                     %sKO%s\n", tests[i], RED, RESET);
 		i++;
 	 }
 }
@@ -229,13 +239,18 @@ int	main(int argc, char **argv)
 	if (argc == 1)
 		return (0);
 
+	system("clear");
+	printf("%s------------------------------------------------------------\n%s", MAGENTA, RESET);
+	printf("%s------------------------------------------------------------\n%s", MAGENTA, RESET);
+	printf("%s--------            %sUNIT TESTS FRAMEWORK%s            --------\n%s", MAGENTA, CYAN, MAGENTA, RESET);
+	printf("%s------------------------------------------------------------\n%s", MAGENTA, RESET);
+	printf("%s------------------------------------------------------------\n%s", MAGENTA, RESET);
+	printf("\n");
+
 	argv++; // pass prog_name
 
 	nb_srcs = count_args_with_option(argv, 's');
 	nb_tests = count_args_with_option(argv, 't');
-
-	printf("%i\n", nb_srcs);
-	printf("%i\n", nb_tests);
 
 	if ((srcs = (char **)malloc(sizeof(char *) * nb_srcs + 1)) == NULL)
 		return (0);
@@ -246,10 +261,14 @@ int	main(int argc, char **argv)
 	take_args_with_option(tests, argv, 't');
 
 	src_compiled = compile_srcs(srcs);
-	printf("result of compile : %i\n", src_compiled);
 
 	if (src_compiled != 0)
+	{
+		printf("Compilation des fonctions :                               %sKO%s\n", RED, RESET);
 		return (0);
+	}
+	printf("Compilation des fonctions :                               %sOK%s\n", GREEN, RESET);
+	printf ("\n");
 
 	process_tests(tests);	
 
