@@ -21,6 +21,7 @@ typedef struct		s_test
 
 typedef struct		s_group_tests
 {
+	char		*func_name;
 	int		nb_tests;
 	t_test		**tests;
 }			t_group_tests;
@@ -28,7 +29,7 @@ typedef struct		s_group_tests
 t_test		*new_fresh_test(void);
 t_test		*new_test(func_test test);
 t_group_tests	*new_fresh_group_tests(void);
-t_group_tests	*new_group_tests(func_test *tests);
+t_group_tests	*new_group_tests(char *func_name, func_test *tests);
 
 // To implement in test_func_to_test.c
 t_group_tests	*get_tests(void);

@@ -25,5 +25,5 @@ int	test_func4(void)
 t_group_tests	*get_tests(void)
 {
 	func_test tests[] = {&test_func1, &test_func2, &test_func3, &test_func4, NULL};
-	return (new_group_tests(tests));
+	return (new_group_tests("ft_func_to_test", tests));
 }

@@ -50,10 +50,9 @@ t_group_tests	*new_fresh_group_tests(void)
 	return (tmp);	
 }
 
-t_group_tests	*new_group_tests(func_test *tests)
+t_group_tests	*new_group_tests(char *func_name, func_test *tests)
 {
 	t_group_tests	*tmp;
-	t_test		*tmp_test;
 	int		nb_tests;
 	int		i;
 
@@ -75,6 +74,10 @@ t_group_tests	*new_group_tests(func_test *tests)
 	while (i < nb_tests)
 	{
 		tmp->tests[i] = new_test(tests[i]);
+		if (func_name)
+			tmp->func_name = func_name;
+		else
+			tmp->func_name = "undefined func";
 		if (!(tmp->tests[i]))
 			return (NULL);
 		i++;
