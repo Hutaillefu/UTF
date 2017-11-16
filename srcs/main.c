@@ -116,7 +116,7 @@ int	compile_test(char *test)
 	command = (char *)malloc(sizeof(char) * strlen(test) + strlen(command_build));
 	strcat(command, command_build);
 	strcat(command, test);
-	printf("%s\n", command);
+	printf("%s%s%s\n" COLOR_RESET,COLOR_RED, command, COLOR_RESET);
 	return (system(command));
 }
 

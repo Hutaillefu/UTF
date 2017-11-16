@@ -11,7 +11,7 @@ int	main(int argc, char **argv)
 	int i;
 	t_group_tests *group_tests;
 
-	i= 0;
+	i = 0;
 	group_tests = get_tests();
 	if (!group_tests)
 		return (0);
